@@ -8,9 +8,10 @@ import           Text.Blaze.Html.Renderer.Text
 import           Text.Blaze.Html4.FrameSet            (center)
 import           Text.Blaze.Html5                     hiding (html, main, param,
                                                        style, text)
-import           Text.Blaze.Html5.Attributes          (charset, class_, href,
-                                                       placeholder, rel, src,
-                                                       style, type_)
+import           Text.Blaze.Html5.Attributes          (action, charset, class_,
+                                                       hidden, href, method,
+                                                       name, placeholder, rel,
+                                                       src, style, type_)
 import           Web.Scotty                           (get, html, middleware,
                                                        notFound, param, scotty)
 
@@ -32,7 +33,7 @@ main = scotty 3000 $ do
         body ! class_ "drac-bg-black" $ center $ index Nothing
 
   get "/" $ do
-    linkStr <- param "link"
+    linkStr <- param "url"
     html . renderHtml $
       render $ do
         body ! class_ "drac-bg-black" $ center $ index (Just linkStr)
@@ -72,7 +73,10 @@ index str = do
   p ! class_ "drac-text drac-line-height drac-text-white" $ "Hello and welcome to this corner of the web."
   p ! class_ "drac-text drac-line-height drac-text-white" $ "Below you can put in a web address that will return the ip."
   div ! class_ "drac-box drac-w-xs" $
-    input !
-    class_ "drac-text drac-input drac-input-white drac-text-white" !
-    placeholder "Input"
+    form ! method "get" ! action "/" $ do
+      input !
+        class_ "drac-text drac-input drac-input-white drac-text-white" !
+        placeholder "Input" !
+        name "url"
+      input ! type_ "submit" ! hidden ""
   -- Add something show the ip of adress given from the route
