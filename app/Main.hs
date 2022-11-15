@@ -5,18 +5,19 @@ import           Network.Wai.Middleware.RequestLogger
 import           Prelude                              hiding (div, head)
 import           Text.Blaze.Html
 import           Text.Blaze.Html.Renderer.Text
-import           Text.Blaze.Html5                     hiding (html, main, style,
-                                                       text)
+import           Text.Blaze.Html5                     hiding (html, main, param,
+                                                       style, text)
 import           Text.Blaze.Html5.Attributes          (charset, class_, href,
-                                                       rel, src, style, type_)
+                                                       placeholder, rel, src,
+                                                       style, type_)
 import           Web.Scotty                           (get, html, middleware,
-                                                       notFound, scotty)
+                                                       notFound, param, scotty)
 
 
 render :: Html -> Html
-render body = do
+render content = do
   websiteHead
-  body
+  content
   websiteFooter
 
 
@@ -25,11 +26,20 @@ main = scotty 3000 $ do
   middleware logStdout
 
   get "/" $ do
-    html . renderHtml $ render $ ""
+    html . renderHtml $
+      render $ do
+        body ! class_ "drac-bg-black" $ index Nothing
+
+  get "/" $ do
+    linkStr <- param "link"
+    html . renderHtml $
+      render $ do
+        body ! class_ "drac-bg-black" $ index (Just linkStr)
 
   notFound $ do
     html . renderHtml $ do
-      text "Error\nThere is no such route"
+      p "Error"
+      p "There is no such route"
 
 
 websiteHead :: Html
@@ -37,16 +47,29 @@ websiteHead = do
   head $ do
     meta ! charset "UTF-8"
     title "acorneroftheweb"
-    link ! rel "stylesheet" ! href "https://unpkg.com/dracula-ui@latest/styles/dracula-ui.css" ! type_ "text/css"
+    link ! rel "stylesheet" !
+      href "https://unpkg.com/dracula-ui@latest/styles/dracula-ui.css" !
+      type_ "text/css"
 
 
 websiteFooter :: Html
 websiteFooter = do
-  footer ! style "position: fixed; bottom: 10px;" ! class_ "drac-box drac-card drac-bg-purple drac-p-sm" $
+  footer ! style "position: fixed; bottom: 10px;" !
+    class_ "drac-box drac-card drac-bg-purple drac-p-sm" $
     div ! class_ "drac-text drac-line-height drac-text-black" $ do
     "This website is created by Nor Führ, source code is on "
-    a ! href "https://github.com/The1Penguin/acorneroftheweb" ! class_ "drac-text-pink--hover" $ "github"
+    a !
+      href "https://github.com/The1Penguin/acorneroftheweb" !
+      class_ "drac-anchor drac-text drac-text-black drac-text-pink--hover" $
+      "github"
     "."
 
-index :: Html
-index = undefined
+index :: Maybe String -> Html
+index str = do
+  header ! class_ "drac-btn drac-bg-purple drac-btn-lg drac-m-sm" $
+    a ! href "/" ! class_ "drac-anchor drac-anchor drac-text drac-text-black drac-text-pink--hover" $ "A corner of the web"
+  p ! class_ "drac-text drac-line-height drac-text-white" $ "Hello and welcome to this corner of the web."
+  p ! class_ "drac-text drac-line-height drac-text-white" $ "Below you can put in a web address that will return the ip."
+  div ! class_ "drac-box drac-w-xs" $
+    input ! class_ "drac-input drac-input-white drac-text-white" ! placeholder "Input"
+  -- Add something show the ip of adress given from the route
