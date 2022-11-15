@@ -71,6 +71,7 @@ executable acorneroftheweb
     build-depends:    base >=4.16.3.0
                     , scotty
                     , blaze-html
+                    , wai-extra
 
     -- Directories containing source files.
     hs-source-dirs:   app
