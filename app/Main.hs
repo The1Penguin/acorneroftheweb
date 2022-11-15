@@ -5,6 +5,7 @@ import           Network.Wai.Middleware.RequestLogger
 import           Prelude                              hiding (div, head)
 import           Text.Blaze.Html
 import           Text.Blaze.Html.Renderer.Text
+import           Text.Blaze.Html4.FrameSet            (center)
 import           Text.Blaze.Html5                     hiding (html, main, param,
                                                        style, text)
 import           Text.Blaze.Html5.Attributes          (charset, class_, href,
@@ -28,13 +29,13 @@ main = scotty 3000 $ do
   get "/" $ do
     html . renderHtml $
       render $ do
-        body ! class_ "drac-bg-black" $ index Nothing
+        body ! class_ "drac-bg-black" $ center $ index Nothing
 
   get "/" $ do
     linkStr <- param "link"
     html . renderHtml $
       render $ do
-        body ! class_ "drac-bg-black" $ index (Just linkStr)
+        body ! class_ "drac-bg-black" $ center $ index (Just linkStr)
 
   notFound $ do
     html . renderHtml $ do
@@ -71,5 +72,7 @@ index str = do
   p ! class_ "drac-text drac-line-height drac-text-white" $ "Hello and welcome to this corner of the web."
   p ! class_ "drac-text drac-line-height drac-text-white" $ "Below you can put in a web address that will return the ip."
   div ! class_ "drac-box drac-w-xs" $
-    input ! class_ "drac-input drac-input-white drac-text-white" ! placeholder "Input"
+    input !
+    class_ "drac-text drac-input drac-input-white drac-text-white" !
+    placeholder "Input"
   -- Add something show the ip of adress given from the route
