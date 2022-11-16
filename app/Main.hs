@@ -30,13 +30,7 @@ main = scotty 3000 $ do
   get "/" $ do
     html . renderHtml $
       render $ do
-        body ! class_ "drac-bg-black" $ center $ index Nothing
-
-  get "/" $ do
-    linkStr <- param "url"
-    html . renderHtml $
-      render $ do
-        body ! class_ "drac-bg-black" $ center $ index (Just linkStr)
+        body ! class_ "drac-bg-black" $ center  index
 
   notFound $ do
     html . renderHtml $ do
@@ -66,17 +60,9 @@ websiteFooter = do
       "github"
     "."
 
-index :: Maybe String -> Html
-index str = do
+index :: Html
+index  = do
   header ! class_ "drac-btn drac-bg-purple drac-btn-lg drac-m-sm" $
     a ! href "/" ! class_ "drac-anchor drac-anchor drac-text drac-text-black drac-text-pink--hover" $ "A corner of the web"
   p ! class_ "drac-text drac-line-height drac-text-white" $ "Hello and welcome to this corner of the web."
-  p ! class_ "drac-text drac-line-height drac-text-white" $ "Below you can put in a web address that will return the ip."
-  div ! class_ "drac-box drac-w-xs" $
-    form ! method "get" ! action "/" $ do
-      input !
-        class_ "drac-text drac-input drac-input-white drac-text-white" !
-        placeholder "Input" !
-        name "url"
-      input ! type_ "submit" ! hidden ""
-  -- Add something show the ip of adress given from the route
+  embed ! src "https://github-readme-stats.vercel.app/api?username=The1Penguin&show_icons=true&theme=dracula"
