@@ -1,4 +1,4 @@
-FROM haskell:9.4.2
+FROM haskell:9.2.4
 WORKDIR /app/user
 
 COPY stack.yaml *.cabal ./
