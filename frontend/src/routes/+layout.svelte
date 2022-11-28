@@ -3,9 +3,9 @@
 </script>
 
 <html data-theme="cupcake" lang="en"></html>
-<header class="flex justify-center mb-auto">
+<header class="flex justify-center my-9">
   <meta charset="utf-8">
-  <a href="/" class="btn btn-primary btn-sm"> A corner of the web
+  <a href="/" class="btn btn-primary btn-md"> A corner of the web
   </a>
 </header>
 
