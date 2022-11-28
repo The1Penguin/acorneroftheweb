@@ -31,12 +31,12 @@ findEmpty board = if isJust index then Just (y1, x1, y2, x2) else Nothing
     y2 = (`div` 3) $ indexFix `mod` 9
     x2 = indexFix `mod` 3
 
-genBoard :: Board -> [Int] -> Int -> Gen Board
-genBoard board [] l = return board
-genBoard board e@(v:vs) l =
-  case l of
-    0 -> return board
-    _ ->
+genBoard :: Board -> [Int] -> Gen Board
+genBoard board [] = do
+  let a = [1..9]
+  b <- shuffle a
+  genBoard board b
+genBoard board e@(v:vs) =
         if verify board then return board else do
           let (y1, x1, y2, x2) = case findEmpty board of
                 Just (a,b,c,d) -> (a,b,c,d)
@@ -53,7 +53,7 @@ genBoard board e@(v:vs) l =
                   | b <- [0..2]]
                  | x <- [0..2]]
                 | y <- [0..2]]
-          if valid new then genBoard new vs (l-1) else genBoard board (vs ++ [v]) l
+          if valid new then genBoard new vs else genBoard board (vs ++ [v])
 
 
 fetchRows :: Board -> [[Cell]]
@@ -185,9 +185,3 @@ temp = [
                [Empty, Empty, Empty],
                [Empty, Empty, Empty]]]
           ]
-
-boardGen :: Int -> Gen Board
-boardGen int = do
-  let a = [1..9]
-  b <- vectorOf 81 $ shuffle a
-  genBoard empty (concat b) int
