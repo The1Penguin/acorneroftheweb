@@ -4,6 +4,7 @@ module Main where
 
 import           Data.Aeson                           (FromJSON, ToJSON)
 import           Data.List
+import           Data.Maybe
 import           GHC.Generics
 import           Network.Wai.Middleware.RequestLogger
 import           Test.QuickCheck
@@ -19,14 +20,44 @@ data Cell = Empty | Val Int
 instance ToJSON Cell
 instance FromJSON Cell
 
--- Idea, input board, check if done, else add to empty, verify it is valid then recursion
-genBoard :: Board -> Gen Board
-genBoard board =
-  if verify board then return board else do
-    undefined
+findEmpty :: Board -> Maybe (Int, Int, Int, Int)
+findEmpty board = if isJust index then Just (y1, x1, y2, x2) else Nothing
+  where
+    list  = concat $ concat $ concat board
+    index = elemIndex Empty list
+    indexFix = fromJust index
+    y1 = indexFix `div` 27
+    x1 = (`div` 9) $ indexFix `mod` 27
+    y2 = (`div` 3) $ indexFix `mod` 9
+    x2 = indexFix `mod` 3
+
+genBoard :: Board -> [Int] -> Int -> Gen Board
+genBoard board [] l = return board
+genBoard board e@(v:vs) l =
+  case l of
+    0 -> return board
+    _ ->
+        if verify board then return board else do
+          let (y1, x1, y2, x2) = case findEmpty board of
+                Just (a,b,c,d) -> (a,b,c,d)
+                Nothing        -> (3,3,3,3)
+          let new =
+                [[[[
+                      if (board !! y !! x !! b !! a) /= Empty
+                      then board !! y !! x !! b !! a
+                      else
+                        (if y1==y && x1 == x && y2 == b && x2 == a
+                         then Val v
+                         else Empty)
+                   | a <- [0..2]]
+                  | b <- [0..2]]
+                 | x <- [0..2]]
+                | y <- [0..2]]
+          if valid new then genBoard new vs (l-1) else genBoard board (vs ++ [v]) l
+
 
 fetchRows :: Board -> [[Cell]]
-fetchRows x = foldr (\y -> (++) $ map (concatMap (!! y)) x) [] [0,1,2]
+fetchRows x = foldr (\y -> (++) $ map (concatMap (!! y)) x) [] [0..2]
 
 fetchCols :: Board -> [[Cell]]
 fetchCols = fetchRows . transpose . map (map transpose)
@@ -73,6 +104,9 @@ main = scotty 3000 $ do
   get "/example" $ do
     json example
 
+  get "/generate" $ do
+    json $ Empty
+
   post "/solve" $ do
       board <- jsonData
       json $ verify board
@@ -114,26 +148,33 @@ example = [
 
 empty :: Board
 empty = [
-             [[[Empty, Empty, Empty],
-               [Empty, Empty, Empty],
-               [Empty, Empty, Empty]],
-              [[Empty, Empty, Empty],
-               [Empty, Empty, Empty],
+         [
+          [
+           [Empty | _ <- [0..2]]
+          | _ <- [0..2]]
+         | _ <- [0..2]]
+        | _ <- [0..2]]
+
+temp :: Board
+temp = [
+             [[[Val 9, Val 6, Val 7],
+               [Val 9, Val 6, Val 7],
+               [Val 9, Val 6, Val 7]],
+              [[Val 9, Val 6, Val 7],
+               [Val 9, Val 6, Val 7],
+               [Val 9, Val 6, Val 7]],
+              [[Val 9, Val 6, Val 7],
+               [Val 9, Val 6, Val 7],
+               [Val 9, Val 6, Val 7]]],
+             [[[Val 9, Val 6, Val 7],
+               [Val 9, Val 6, Val 7],
+               [Val 9, Val 6, Val 7]],
+              [[Val 9, Val 6, Val 7],
+               [Val 9, Empty, Empty],
                [Empty, Empty, Empty]],
               [[Empty, Empty, Empty],
                [Empty, Empty, Empty],
                [Empty, Empty, Empty]]],
-
-             [[[Empty, Empty, Empty],
-               [Empty, Empty, Empty],
-               [Empty, Empty, Empty]],
-              [[Empty, Empty, Empty],
-               [Empty, Empty, Empty],
-               [Empty, Empty, Empty]],
-              [[Empty, Empty, Empty],
-               [Empty, Empty, Empty],
-               [Empty, Empty, Empty]]],
-
              [[[Empty, Empty, Empty],
                [Empty, Empty, Empty],
                [Empty, Empty, Empty]],
@@ -144,3 +185,9 @@ empty = [
                [Empty, Empty, Empty],
                [Empty, Empty, Empty]]]
           ]
+
+boardGen :: Int -> Gen Board
+boardGen int = do
+  let a = [1..9]
+  b <- vectorOf 81 $ shuffle a
+  genBoard empty (concat b) int
