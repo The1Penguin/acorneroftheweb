@@ -3,7 +3,7 @@
 module Main where
 
 import           Data.Aeson                           (FromJSON, ToJSON)
-import           Data.List                            (transpose)
+import           Data.List
 import           GHC.Generics
 import           Network.Wai.Middleware.RequestLogger
 import           Test.QuickCheck
@@ -14,28 +14,16 @@ type Board = [[Subboard]]
 type Subboard = [[Cell]]
 
 data Cell = Empty | Val Int
-  deriving (Show, Generic)
+  deriving (Show, Generic, Eq)
 
 instance ToJSON Cell
 instance FromJSON Cell
 
-genSubBoard :: Gen Subboard
-genSubBoard = do
-  a <- shuffle [1 .. 9]
-  let b  = [[0,1,2],
-            [3,4,5],
-            [6,7,8]]
-  return $ map (map (\x -> Val (a !! x))) b
-
-
-genBoard :: Gen Board
-genBoard = do
-  a <- vectorOf 9 genSubBoard
-  let b  = [[0,1,2],
-            [3,4,5],
-            [6,7,8]]
-  let c = map (map (a !!)) b
-  if verify c then return c else genBoard
+-- Idea, input board, check if done, else add to empty, verify it is valid then recursion
+genBoard :: Board -> Gen Board
+genBoard board =
+  if verify board then return board else do
+    undefined
 
 fetchRows :: Board -> [[Cell]]
 fetchRows x = foldr (\y -> (++) $ map (concatMap (!! y)) x) [] [0,1,2]
@@ -51,6 +39,22 @@ listVerify = (== 45) . foldr (\x -> (+) $ case x of
                                  Empty -> 0
                                  Val i -> i
                              ) 0
+
+squareValid :: Subboard -> Bool
+squareValid = listValid . concat
+
+listValid :: [Cell] -> Bool
+listValid x = a == b
+  where
+    a = filter (/= Empty) x
+    b = nub a
+
+valid :: Board -> Bool
+valid x = squares && rows && cols
+  where
+    squares = and $ concatMap (map squareValid) x
+    rows = all listValid $ fetchRows x
+    cols = all listValid $ fetchRows x
 
 verify :: Board -> Bool
 verify x = squares && rows && cols
@@ -76,34 +80,67 @@ main = scotty 3000 $ do
 
 example :: Board
 example = [
-             [[[Val 3, Val 1, Val 7],
-               [Val 9, Val 2, Val 5],
-               [Val 4, Val 6, Val 8]],
-              [[Val 2, Val 5, Val 4],
-               [Val 1, Val 8, Val 6],
-               [Val 3, Val 9, Val 7]],
-              [[Val 8, Val 9, Val 6],
-               [Val 4, Val 7, Val 3],
-               [Val 1, Val 5, Val 2]]],
-
+             [[[Val 9, Val 6, Val 7],
+               [Val 4, Val 8, Val 1],
+               [Val 5, Val 2, Val 3]],
+              [[Val 1, Val 3, Val 2],
+               [Val 6, Val 5, Val 7],
+               [Val 4, Val 9, Val 8]],
+              [[Val 4, Val 5, Val 8],
+               [Val 2, Val 3, Val 9],
+               [Val 1, Val 6, Val 7]]],
 
              [[[Val 2, Val 3, Val 4],
-               [Val 5, Val 8, Val 6],
-               [Val 1, Val 6, Val 9]],
-              [[Val 6, Val 7, Val 1],
-               [Val 9, Val 4, Val 2],
-               [Val 5, Val 3, Val 8]],
-              [[Val 9, Val 8, Val 5],
-               [Val 7, Val 3, Val 1],
-               [Val 6, Val 2, Val 4]]],
+               [Val 1, Val 5, Val 6],
+               [Val 7, Val 9, Val 8]],
+              [[Val 8, Val 1, Val 9],
+               [Val 7, Val 2, Val 3],
+               [Val 5, Val 4, Val 6]],
+              [[Val 5, Val 7, Val 6],
+               [Val 9, Val 8, Val 4],
+               [Val 3, Val 2, Val 1]]],
 
-             [[[Val 8, Val 9, Val 1],
-               [Val 7, Val 4, Val 2],
-               [Val 6, Val 5, Val 3]],
-              [[Val 4, Val 2, Val 3],
-               [Val 8, Val 6, Val 5],
-               [Val 7, Val 1, Val 9]],
-              [[Val 5, Val 6, Val 7],
-               [Val 3, Val 1, Val 9],
-               [Val 2, Val 4, Val 8]]]
+             [[[Val 6, Val 4, Val 2],
+               [Val 3, Val 7, Val 9],
+               [Val 8, Val 1, Val 5]],
+              [[Val 9, Val 8, Val 5],
+               [Val 2, Val 6, Val 1],
+               [Val 3, Val 7, Val 4]],
+              [[Val 7, Val 1, Val 3],
+               [Val 8, Val 4, Val 5],
+               [Val 6, Val 9, Val 2]]]
+          ]
+
+
+empty :: Board
+empty = [
+             [[[Empty, Empty, Empty],
+               [Empty, Empty, Empty],
+               [Empty, Empty, Empty]],
+              [[Empty, Empty, Empty],
+               [Empty, Empty, Empty],
+               [Empty, Empty, Empty]],
+              [[Empty, Empty, Empty],
+               [Empty, Empty, Empty],
+               [Empty, Empty, Empty]]],
+
+             [[[Empty, Empty, Empty],
+               [Empty, Empty, Empty],
+               [Empty, Empty, Empty]],
+              [[Empty, Empty, Empty],
+               [Empty, Empty, Empty],
+               [Empty, Empty, Empty]],
+              [[Empty, Empty, Empty],
+               [Empty, Empty, Empty],
+               [Empty, Empty, Empty]]],
+
+             [[[Empty, Empty, Empty],
+               [Empty, Empty, Empty],
+               [Empty, Empty, Empty]],
+              [[Empty, Empty, Empty],
+               [Empty, Empty, Empty],
+               [Empty, Empty, Empty]],
+              [[Empty, Empty, Empty],
+               [Empty, Empty, Empty],
+               [Empty, Empty, Empty]]]
           ]
