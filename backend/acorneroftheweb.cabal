@@ -69,8 +69,8 @@ executable acorneroftheweb
 
     -- Other library packages from which modules are imported.
     build-depends:    base >=4.16.3.0
+                    , aeson
                     , scotty
-                    , blaze-html
                     , wai-extra
 
     -- Directories containing source files.

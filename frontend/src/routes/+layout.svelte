@@ -3,7 +3,7 @@
 </script>
 
 <html data-theme="cupcake" lang="en"></html>
-<header class="flex justify-center">
+<header class="flex justify-center mb-auto">
   <meta charset="utf-8">
   <a href="/" class="btn btn-primary btn-sm"> A corner of the web
   </a>
@@ -13,7 +13,7 @@
   <slot />
 </main>
 
-<footer class="footer p-10 bg-neutral text-neutral-content">
+<footer class="footer p-10 bg-neutral text-neutral-content fixed inset-x-0 bottom-0">
   <div>
     <p>
       This website is created by Nor Führ, source code is on
