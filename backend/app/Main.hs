@@ -39,7 +39,7 @@ genBoard board [] = do
   genBoard board b
 genBoard board vs =
         if verify board then return board else do
-          let (y1, x1, y2, x2) = case findEmpty board of
+          let (y1, _, y2, _) = case findEmpty board of
                 Just (a,b,c,d) -> (a,b,c,d)
                 Nothing        -> (3,3,3,3)
           let new =
@@ -169,10 +169,10 @@ empty :: Board
 empty = [
          [
           [
-           [Empty | _ <- [0..2]]
-          | _ <- [0..2]]
-         | _ <- [0..2]]
-        | _ <- [0..2]]
+           [Empty | _ <- [0..2 :: Integer]]
+          | _ <- [0..2 :: Integer]]
+         | _ <- [0..2 :: Integer]]
+        | _ <- [0..2 :: Integer]]
 
 temp :: Board
 temp = [
