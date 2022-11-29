@@ -36,7 +36,7 @@ genBoard board [] = do
   let a = [1..9]
   b <- shuffle a
   genBoard board b
-genBoard board e@(v:vs) =
+genBoard board vs =
         if verify board then return board else do
           let (y1, x1, y2, x2) = case findEmpty board of
                 Just (a,b,c,d) -> (a,b,c,d)
@@ -46,14 +46,14 @@ genBoard board e@(v:vs) =
                       if (board !! y !! x !! b !! a) /= Empty
                       then board !! y !! x !! b !! a
                       else
-                        (if y1==y && x1 == x && y2 == b && x2 == a
-                         then Val v
+                        (if y1==y && y2 == b
+                         then Val (vs !! (3*x+a))
                          else Empty)
                    | a <- [0..2]]
                   | b <- [0..2]]
                  | x <- [0..2]]
                 | y <- [0..2]]
-          if valid new then genBoard new vs else genBoard board (vs ++ [v])
+          if valid new then genBoard new [] else genBoard board []
 
 
 fetchRows :: Board -> [[Cell]]
@@ -97,12 +97,6 @@ verify x = squares && rows && cols
 main :: IO ()
 main = scotty 3000 $ do
   middleware logStdout
-
-  get "/generate" $ do
-    json (undefined :: Board)
-
-  get "/example" $ do
-    json example
 
   get "/generate" $ do
     json $ Empty
