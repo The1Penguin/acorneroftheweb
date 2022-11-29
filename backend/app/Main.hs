@@ -173,34 +173,3 @@ empty = [
           | _ <- [0..2 :: Integer]]
          | _ <- [0..2 :: Integer]]
         | _ <- [0..2 :: Integer]]
-
-temp :: Board
-temp = [
-             [[[Val 9, Val 6, Val 7],
-               [Val 9, Val 6, Val 7],
-               [Val 9, Val 6, Val 7]],
-              [[Val 9, Val 6, Val 7],
-               [Val 9, Val 6, Val 7],
-               [Val 9, Val 6, Val 7]],
-              [[Val 9, Val 6, Val 7],
-               [Val 9, Val 6, Val 7],
-               [Val 9, Val 6, Val 7]]],
-             [[[Val 9, Val 6, Val 7],
-               [Val 9, Val 6, Val 7],
-               [Val 9, Val 6, Val 7]],
-              [[Val 9, Val 6, Val 7],
-               [Val 9, Empty, Empty],
-               [Empty, Empty, Empty]],
-              [[Empty, Empty, Empty],
-               [Empty, Empty, Empty],
-               [Empty, Empty, Empty]]],
-             [[[Empty, Empty, Empty],
-               [Empty, Empty, Empty],
-               [Empty, Empty, Empty]],
-              [[Empty, Empty, Empty],
-               [Empty, Empty, Empty],
-               [Empty, Empty, Empty]],
-              [[Empty, Empty, Empty],
-               [Empty, Empty, Empty],
-               [Empty, Empty, Empty]]]
-          ]
