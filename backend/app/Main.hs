@@ -2,6 +2,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 module Main where
 
+import           Control.Monad.IO.Class
 import           Data.Aeson                           (FromJSON, ToJSON)
 import           Data.List
 import           Data.Maybe
@@ -55,6 +56,24 @@ genBoard board vs =
                 | y <- [0..2]]
           if valid new then genBoard new [] else genBoard board []
 
+removeBoard :: Board -> Int -> Gen Board
+removeBoard board 0 = return board
+removeBoard board amount = do
+          x1 <- elements [0..2]
+          x2 <- elements [0..2]
+          y1 <- elements [0..2]
+          y2 <- elements [0..2]
+          let new =
+                [[[[
+                      if y1==y && x1 == x && y2 == b && x2 == a
+                      then Empty
+                      else board !! y !! x !! b !! a
+                   | a <- [0..2]]
+                  | b <- [0..2]]
+                 | x <- [0..2]]
+                | y <- [0..2]]
+          removeBoard new (amount-1)
+
 
 fetchRows :: Board -> [[Cell]]
 fetchRows x = foldr (\y -> (++) $ map (concatMap (!! y)) x) [] [0..2]
@@ -98,8 +117,14 @@ main :: IO ()
 main = scotty 3000 $ do
   middleware logStdout
 
+  get "/example" $ do
+    json example
+
   get "/generate" $ do
-    json $ Empty
+      a <- liftIO $ generate $ genBoard empty []
+      b <- liftIO $ generate $ removeBoard a 20
+      json b
+
 
   post "/solve" $ do
       board <- jsonData
