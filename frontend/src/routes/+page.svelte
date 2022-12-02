@@ -26,11 +26,11 @@
   {#each nums as outer}
     <div class="grid-cols-3 flex">
     {#each outer as inner}
-      <div class="grid-rows-3">
+      <div class="grid-rows-3 m-1">
       {#each inner as outer2}
         <div class="grid-cols-3">
         {#each outer2 as inner2}
-          <div class="btn">
+          <div class="btn btn-square">
             {#if inner2.tag == 'Val'}
               {inner2.contents}
             {:else}
