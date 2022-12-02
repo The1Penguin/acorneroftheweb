@@ -140,6 +140,8 @@ extra-deps:
   - old-time-1.1.0.3@sha256:c91fbb3ee73d20ccd015842b30f1f29a304893ebe0ae3128b7bbc13d5bb0d4c8,1328
   - StateVar-1.2.2@sha256:3c022c00485fe165e3080d5da6b3ca9c9b02f62c5deebc584d1b3d1309ce673e,1673
   - old-locale-1.0.0.7@sha256:fa998be2c7e00cd26a6e9075bea790caaf3932caa3e9497ad69bc20380dd6911,1071
+  - wai-cors-0.2.7@sha256:c3309a9c9db001cb5c3c777222ba3389f35c2ec57425731cddf2af8515b204b2,2905
+  - base-unicode-symbols-0.2.4.2@sha256:5dc87284ab8d612fefdc32400bf2531db809a9a617c344b85ac752396aa1e7c6,2407
 
 # Override default flag values for local packages and extra-deps
 # flags: {}

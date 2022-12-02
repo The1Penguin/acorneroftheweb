@@ -704,4 +704,18 @@ packages:
       size: 263
   original:
     hackage: old-locale-1.0.0.7@sha256:fa998be2c7e00cd26a6e9075bea790caaf3932caa3e9497ad69bc20380dd6911,1071
+- completed:
+    hackage: wai-cors-0.2.7@sha256:c3309a9c9db001cb5c3c777222ba3389f35c2ec57425731cddf2af8515b204b2,2905
+    pantry-tree:
+      sha256: 0e2d17d354d6ebf02aa5a37dddb83b716038a1d6b4dcda0a6379ceb60909e956
+      size: 792
+  original:
+    hackage: wai-cors-0.2.7@sha256:c3309a9c9db001cb5c3c777222ba3389f35c2ec57425731cddf2af8515b204b2,2905
+- completed:
+    hackage: base-unicode-symbols-0.2.4.2@sha256:5dc87284ab8d612fefdc32400bf2531db809a9a617c344b85ac752396aa1e7c6,2407
+    pantry-tree:
+      sha256: fa1b15fd95e43ebc916ef7bb7f5069862c12c948dad57ceae6da5319c188bce9
+      size: 1164
+  original:
+    hackage: base-unicode-symbols-0.2.4.2@sha256:5dc87284ab8d612fefdc32400bf2531db809a9a617c344b85ac752396aa1e7c6,2407
 snapshots: []

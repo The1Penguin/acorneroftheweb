@@ -8,6 +8,7 @@ import           Data.List
 import           Data.Maybe
 import           GHC.Generics
 import           Network.Wai.Middleware.RequestLogger
+import           Network.Wai.Middleware.Cors
 import           Test.QuickCheck
 import           Web.Scotty
 
@@ -116,6 +117,7 @@ verify x = squares && rows && cols
 main :: IO ()
 main = scotty 3000 $ do
   middleware logStdout
+  middleware simpleCors
 
   get "/example" $ do
     json example
