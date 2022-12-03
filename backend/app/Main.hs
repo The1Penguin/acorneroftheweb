@@ -2,15 +2,19 @@
 {-# LANGUAGE OverloadedStrings #-}
 module Main where
 
+import           Control.Concurrent
+import           Control.Monad (replicateM)
 import           Control.Monad.IO.Class
 import           Data.Aeson                           (FromJSON, ToJSON)
-import           Data.List
+import           Data.IORef
+import           Data.List ( nub, transpose, elemIndex )
 import           Data.Maybe
 import           GHC.Generics
 import           Network.Wai.Middleware.RequestLogger
 import           Network.Wai.Middleware.Cors
 import           Test.QuickCheck
 import           Web.Scotty
+import           Prelude hiding (lookup)
 
 type Board = [[Subboard]]
 
@@ -105,17 +109,17 @@ valid x = squares && rows && cols
   where
     squares = and $ concatMap (map squareValid) x
     rows = all listValid $ fetchRows x
-    cols = all listValid $ fetchRows x
+    cols = all listValid $ fetchCols x
 
 verify :: Board -> Bool
 verify x = squares && rows && cols
   where
     squares = and $ concatMap (map squareVerify) x
     rows = all listVerify $ fetchRows x
-    cols = all listVerify $ fetchRows x
+    cols = all listVerify $ fetchCols x
 
-main :: IO ()
-main = scotty 3000 $ do
+routes :: IORef [Board] -> ScottyM ()
+routes boards = do
   middleware logStdout
   middleware simpleCors
 
@@ -123,15 +127,27 @@ main = scotty 3000 $ do
     json example
 
   get "/generate" $ do
-      a <- liftIO $ generate $ genBoard empty []
-      b <- liftIO $ generate $ removeBoard a 20
+      a <- liftIO $ readIORef boards
+      let b = head a
+      _ <- liftIO $ forkIO $ update boards (tail a)
       json b
-
 
   post "/solve" $ do
       board <- jsonData
       json $ verify board
 
+update :: IORef [Board] -> [Board] -> IO ()
+update board list= do
+  a <- generate $ genBoard empty []
+  writeIORef board (list ++ [a])
+  putStrLn "Added a board to the list"
+
+main :: IO ()
+main = do
+  a <- replicateM 3 $ (generate . flip removeBoard 40)  =<< generate (genBoard empty [])
+  print a
+  c <- newIORef a
+  scotty 3000 $ routes c
 
 example :: Board
 example = [

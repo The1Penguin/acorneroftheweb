@@ -718,4 +718,18 @@ packages:
       size: 1164
   original:
     hackage: base-unicode-symbols-0.2.4.2@sha256:5dc87284ab8d612fefdc32400bf2531db809a9a617c344b85ac752396aa1e7c6,2407
+- completed:
+    hackage: cache-0.1.3.0@sha256:b87d21d21946ad69ea99be03f40f7a9b8d2250d5047328fe7bff33373f4e8546,1717
+    pantry-tree:
+      sha256: c7ab409e16a9454d141cf938a72077459900e6616a523d6438817b666082871c
+      size: 388
+  original:
+    hackage: cache-0.1.3.0@sha256:b87d21d21946ad69ea99be03f40f7a9b8d2250d5047328fe7bff33373f4e8546,1717
+- completed:
+    hackage: clock-0.8.3@sha256:a692159828c2cd278eaec317b3a7e9fb6d7b787c8a19f086004d15d9fa1fd72c,4601
+    pantry-tree:
+      sha256: 3e62393d5c7671b21d8aa84ef9ee0550334053711c80b5beeca295466a6615c7
+      size: 499
+  original:
+    hackage: clock-0.8.3@sha256:a692159828c2cd278eaec317b3a7e9fb6d7b787c8a19f086004d15d9fa1fd72c,4601
 snapshots: []
