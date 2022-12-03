@@ -2,7 +2,6 @@
 <script lang="ts">
   import { onMount } from "svelte"
   let numbers = [];
-
   onMount(async () => {
       const resp = await fetch('http://localhost:3000/generate');
       numbers = await resp.json();
@@ -25,19 +24,21 @@
   <div class="grid-rows-3">
   {#await numbers then nums}
     {#each nums as outer}
-      <div class="grid-cols-3 flex">
+      <div class="flex">
       {#each outer as inner}
         <div class="grid-rows-3 m-1">
         {#each inner as outer2}
-          <div class="grid-cols-3">
+          <div class="flex">
           {#each outer2 as inner2}
-            <div class="btn btn-square">
               {#if inner2.tag == 'Val'}
+                <div class="btn btn-square btn-success">
                 {inner2.contents}
+                </div>
               {:else}
-                0
+                <div class="btn btn-square btn-secondary">
+
+                </div>
               {/if}
-            </div>
           {/each}
           </div>
         {/each}
@@ -47,5 +48,4 @@
     {/each}
   {/await}
   </div>
-
 </div>

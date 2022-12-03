@@ -9,11 +9,11 @@
   </a>
 </header>
 
-<main>
+<main class="min-h-screen">
   <slot />
 </main>
 
-<footer class="footer p-10 bg-neutral text-neutral-content fixed inset-x-0 bottom-0">
+<footer class="footer p-10 bg-neutral text-neutral-content">
   <div>
     <p>
       This website is created by Nor Führ, source code is on
