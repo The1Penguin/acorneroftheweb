@@ -68,10 +68,12 @@ executable acorneroftheweb
     -- other-extensions:
 
     -- Other library packages from which modules are imported.
-    build-depends:    base >=4.16.3.0
+    build-depends:    QuickCheck
                     , aeson
+                    , base >=4.16.3.0
                     , cache
-                    , QuickCheck
+                    , random
+                    , random-shuffle
                     , scotty
                     , wai-cors
                     , wai-extra

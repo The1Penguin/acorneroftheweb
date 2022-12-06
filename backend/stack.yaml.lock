@@ -732,4 +732,18 @@ packages:
       size: 499
   original:
     hackage: clock-0.8.3@sha256:a692159828c2cd278eaec317b3a7e9fb6d7b787c8a19f086004d15d9fa1fd72c,4601
+- completed:
+    hackage: random-shuffle-0.0.4@sha256:d0b9783c30208d1ce05caa05139fb00372802edb6c678b73d61b5eb4eebb3aba,818
+    pantry-tree:
+      sha256: e6e1c894e726443bc7165618de6745812610e70f0df22dbe5c130bafee2c507b
+      size: 226
+  original:
+    hackage: random-shuffle-0.0.4@sha256:d0b9783c30208d1ce05caa05139fb00372802edb6c678b73d61b5eb4eebb3aba,818
+- completed:
+    hackage: MonadRandom-0.6@sha256:972d28e2a954139277064db49ab2de9822123d37cbd4d5a18d3567038907049e,1430
+    pantry-tree:
+      sha256: e1c8aa8e8094568a76e5c9bae601915a01f975ff2cc259e6b21653ecd3c96fbb
+      size: 709
+  original:
+    hackage: MonadRandom-0.6@sha256:972d28e2a954139277064db49ab2de9822123d37cbd4d5a18d3567038907049e,1430
 snapshots: []
