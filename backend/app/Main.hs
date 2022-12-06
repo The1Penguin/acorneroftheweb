@@ -122,8 +122,8 @@ verify x = rows && cols
     rows    = all listVerify $ fetchRows x
     cols    = all listVerify $ fetchCols x
 
-routes :: IORef [Board] -> ScottyM ()
-routes boards = do
+routes :: ScottyM ()
+routes = do
   middleware logStdout
   middleware simpleCors
 
@@ -131,10 +131,8 @@ routes boards = do
     json example
 
   get "/generate" $ do
-      a <- liftIO $ readIORef boards
-      let b = head a
-      _ <- liftIO $ forkIO $ update boards (tail a)
-      json b
+      a <- liftIO $ (generate . flip removeBoard 40) =<< genBoard
+      json a
 
   post "/solve" $ do
       board <- jsonData
@@ -147,11 +145,7 @@ update board list= do
   putStrLn "Added a board to the list"
 
 main :: IO ()
-main = do
-  a <- replicateM 3 $ (generate . flip removeBoard 40) =<< genBoard
-  print a
-  c <- newIORef a
-  scotty 3000 $ routes c
+main = scotty 3000 routes
 
 example :: Board
 example = [[Val 5, Val 3, Val 4, Val 6, Val 7, Val 8, Val 9, Val 1, Val 2],

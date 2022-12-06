@@ -2,9 +2,10 @@
 <script lang="ts">
   import { onMount } from "svelte"
   let numbers = [];
+  let range = [1,2,3,4,5,6,7,8,9];
   onMount(async () => {
       const resp = await fetch('http://localhost:3000/generate');
-      numbers = await resp.json();
+      numbers = resp.json();
     });
 </script>
 
@@ -21,31 +22,33 @@
     </p>
   </article>
 
-  <div class="grid-rows-3">
-  {#await numbers then nums}
-    {#each nums as outer}
-      <div class="flex">
-      {#each outer as inner}
-        <div class="grid-rows-3 m-1">
-        {#each inner as outer2}
-          <div class="flex">
-          {#each outer2 as inner2}
-              {#if inner2.tag == 'Val'}
-                <div class="btn btn-square btn-success">
-                {inner2.contents}
-                </div>
-              {:else}
-                <div class="btn btn-square btn-secondary">
+  {#await numbers}
+  <p>Loading board</p>
 
-                </div>
-              {/if}
-          {/each}
+  {:then nums}
+  <div class="grid grid-cols-9 grid-rows-9">
+    {#each nums as outer}
+      {#each outer as inner}
+        {#if inner.tag == 'Val'}
+          <div class="m-0.5 btn btn-square btn-success btn-xs md:btn-md">
+          {inner.contents}
           </div>
-        {/each}
-        </div>
+        {:else}
+          <div class="m-0.5 btn btn-square btn-secondary btn-xs md:btn-md">
+
+          </div>
+        {/if}
       {/each}
+    {/each}
+  </div>
+
+  {/await}
+
+  <div class="m-3">
+    {#each range as numbs}
+      <div class="m-0.5 btn btn-square btn-info btn-xs md:btn-md">
+        {numbs}
       </div>
     {/each}
-  {/await}
   </div>
 </div>
