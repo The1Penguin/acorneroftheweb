@@ -51,4 +51,10 @@
       </div>
     {/each}
   </div>
+
+  <div>
+    <form>
+      <button type="submit" class="btn btn-primary">Submit to verify</button>
+    </form>
+  </div>
 </div>
